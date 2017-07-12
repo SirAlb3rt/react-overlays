@@ -207,6 +207,13 @@ class Modal extends React.Component {
     renderBackdrop: (props) => <div {...props} />
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isMounted: false,
+    };
+  }
+
   omitProps(props, propTypes) {
 
     const keys = Object.keys(props);
@@ -338,7 +345,9 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
+    this.setState({
+      isMounted: true,
+    });
     if (this.props.show) {
       this.onShow();
     }
@@ -359,7 +368,9 @@ class Modal extends React.Component {
   componentWillUnmount() {
     let { show, transition } = this.props;
 
-    this._isMounted = false;
+    this.setState({
+      isMounted: false
+    });
 
     if (show || (transition && !this.state.exited)) {
       this.onHide();
@@ -474,7 +485,7 @@ class Modal extends React.Component {
   enforceFocus = () => {
     let { enforceFocus } = this.props;
 
-    if (!enforceFocus || !this._isMounted || !this.isTopModal()) {
+    if (!enforceFocus || !this.state.isMounted || !this.isTopModal()) {
       return;
     }
 
